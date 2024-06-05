@@ -1,0 +1,29 @@
+---
+
+
+- name: ansible_will_not_work
+  hosts: all
+  vars:
+    - ssh_key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB691V/Ajt9HMUQHtNjEhmKnCPCieRp77zoEgLdNpF2d
+    - packages:
+      - vim
+      - nginx
+      - python3
+      - ssh
+      - git
+
+  tasks:
+    - name: Let there be a User
+      user:
+        name: user
+        shell: /bin/bash
+
+    - name: Import SSH keys
+      authorized_key:
+        user: user
+        key: '{{ ssh_key }}'
+
+    - name: Install packages
+      ansible.builtin.apt:
+        name: '{{ item }}'
+      loop: '{{ packages }}'
